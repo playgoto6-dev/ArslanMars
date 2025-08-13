@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мой креативный сайт</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      color: white;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Холст для звёзд */
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: #0a0a0a;
+    }
+
+    /* Цветное свечение поверх фона */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(-45deg, #ff6b6b33, #feca5733, #48dbfb33, #5f27cd33);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      z-index: -1;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 4rem;
+      animation: fadeInDown 1.5s ease;
+    }
+
+    header p {
+      font-size: 1.5rem;
+      margin-top: 10px;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    section {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(5px);
+      transform: translateY(30px);
+      opacity: 0;
+      transition: all 0.8s ease;
+    }
+
+    .card.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="stars"></canvas>
+
+  <header>
+    <h1>Арслан Mars</h1>
+    <p>Креативный разработчик / дизайнер / аниматор</p>
+  </header>
+
+  <section>
+    <div class="card">
+      <h2>Обо мне</h2>
+      <p>Привет путник! Меня зовут Арслан Mars, я люблю создавать модели,скины, анимации и создавать моды на Bedrock издание, также на этом сайте вы сможете увидеть мои проекты и даже скачать их. Я работаю в Prisma3D так что перенести эти модели в Mine-imator либо Blender к сожалению не удастся!.</p>
+    </div>
+    <div class="card">
+      <h2>Проекты</h2>
+      <p>MelkiyPersonash именно так я назвал этот проект. скачать: <a href="https://playgoto6-dev.github.io/ArsMars/"</a> Скачать здесь</p> для его использования надо чуть подкаректировать скин, а именно: убрать глаза. после этого зайдите на этот сайт от Ратмира и измените скин: <a href="https://theratmir.github.io/TheRig/ThePlush.html"</a> Зайти на сайт здесь</p>
+удачного использования!</p>
+    </div>
+  </section>
+
+<section class="gallery">
+  <img src="photo1.jpg" alt="Фото 1">
+  <img src="photo2.jpg" alt="Фото 2">
+  <img src="photo3.jpg" alt="Фото 3">
+</section>
+
+  <footer>
+    <p>Мой телеграмм канал: <a href="https://t.me/arslan_mars_102830" style="color:white;">Telegram</a></p>
+  </footer>
+
+  <script>
+    // Плавное появление карточек
+    const cards = document.querySelectorAll('.card');
+    window.addEventListener('scroll', () => {
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 50) {
+          card.classList.add('show');
+        }
+      });
+    });
+
+    // Анимированные звёзды
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function createStars(count) {
+      stars = [];
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.5,
+          speed: Math.random() * 0.5 + 0.2
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function updateStars() {
+      stars.forEach(star => {
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    function animateStars() {
+      drawStars();
+      updateStars();
+      requestAnimationFrame(animateStars);
+    }
+
+    createStars(150);
+    animateStars();
+  </script>
+
+</body>
+</html>
